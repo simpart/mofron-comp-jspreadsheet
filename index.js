@@ -18,9 +18,11 @@ module.exports = class extends mofron.class.Component {
             super();
             this.modname("Jspreadsheet");
             
-            this.confmng().add("data", { list: true, type: "array" });
-            this.confmng().add("head", { list: true, type: "string" });
-
+            this.confmng().add("data",  { list: true, type: "array" });
+            this.confmng().add("head",  { list: true, type: "string" });
+            this.confmng().add("core",  { type: "object" });
+            this.confmng().add("param", { type: "key-value" });
+            
 	    /* init config */
 	    if (0 < arguments.length) {
                 this.config(p1);
@@ -62,6 +64,15 @@ module.exports = class extends mofron.class.Component {
 	    throw e;
 	}
     }
+
+    spreadParam (prm) {
+        try {
+	    return this.confmng("param", prm);
+	} catch (e) {
+            console.error(e.stack);
+            throw e;
+	}
+    }
     
     afterRender () {
         try {
@@ -83,14 +94,31 @@ module.exports = class extends mofron.class.Component {
 	    let hed      = this.confmng("head");
             let set_head = [];
 	    for (let hidx in hed) {
-                set_head.push({ title:hed[hidx], type:'text', width:100 });
+                set_head.push({ title:hed[hidx], type:'text', width:150 });
 	    }
-
-	    jspreadsheet(
-                this.childDom().getRawDom(),
-                { data: set_dat, columns: set_head }
+            
+	    let set_param = {
+                data: set_dat,
+		columns: set_head
+	    };
+            let spd_prm = this.confmng("param");
+            for (let pidx in spd_prm) {
+                set_param[pidx] = spd_prm[pidx];
+	    }
+	    this.confmng(
+	        "core",
+	        jspreadsheet(this.childDom().getRawDom(), set_param)
             );
 	} catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
+    }
+    
+    getSpreadCore () {
+        try {
+            return this.confmng("core");
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
