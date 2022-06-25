@@ -55,7 +55,7 @@ module.exports = class extends mofron.class.Component {
             throw e;
 	}
     }
-
+    
     data (prm) {
         try {
             return this.confmng("data", prm);
@@ -64,7 +64,7 @@ module.exports = class extends mofron.class.Component {
 	    throw e;
 	}
     }
-
+    
     spreadParam (prm) {
         try {
 	    return this.confmng("param", prm);
@@ -75,6 +75,26 @@ module.exports = class extends mofron.class.Component {
     }
     
     afterRender () {
+        try {
+            super.afterRender();
+            this.showSpread();
+	} catch (e) {
+            console.error(e.stack);
+            throw e;
+	}
+    }
+
+    update () {
+        try {
+            this.getSpreadCore().destroy(this.childDom().getRawDom(), true);
+	    this.showSpread();
+	} catch (e) {
+            console.error(e.stack);
+            throw e;
+	}
+    }
+    
+    showSpread () {
         try {
             super.afterRender();
             
