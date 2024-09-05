@@ -22,7 +22,8 @@ module.exports = class extends mofron.class.Component {
             this.confmng().add("head",  { list: true, type: "string" });
             this.confmng().add("core",  { type: "object" });
             this.confmng().add("param", { type: "key-value" });
-            
+            this.confmng().add("select-column", { type: "number", init:-1 });
+
 	    /* init config */
 	    if (0 < arguments.length) {
                 this.config(p1);
@@ -63,6 +64,15 @@ module.exports = class extends mofron.class.Component {
             console.error(e.stack);
 	    throw e;
 	}
+    }
+
+    selectColumn (prm) {
+        try {
+            return this.confmng("select-column", prm);
+	} catch (e) {
+            console.error(e.stack);
+            throw e;
+        }
     }
     
     spreadParam (prm) {
